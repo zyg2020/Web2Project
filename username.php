@@ -11,10 +11,12 @@
   	];
 
 	if (isset($_GET['username']) && (strlen($_GET['username']) !== 0)) {
+		$username = filter_input(INPUT_GET, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
 	    while ($row = $usernameStatement->fetch()) {
-	    	if (strtolower($_GET['username'] == strtolower($row['username']))  {
+	    	if (strtolower($username) == strtolower($row['username'])) {
 	    	 	$response['usernameAvailable'] = false;
-	    	 }elseif (condition) {
+	    	 }els{
 	    	 	$response['success'] = true;
 	    	 } 
 	    }
