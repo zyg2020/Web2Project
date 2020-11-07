@@ -7,19 +7,19 @@
     $projectsStatement->execute();
 
 	// $myPDO = MyPDO::getInstance();
-	function getCategories($projectId){
-		global $db;
-		$CorrespondingCategoryQuery = "SELECT c.name FROM projects p 
-								  	INNER JOIN projectscategories pc
-										ON p.id = pc.projectId
-									INNER JOIN categories c
-										ON c.id = pc.categoryId
-										WHERE p.id = :id";
-		$CategorySatement = $db->prepare($CorrespondingCategoryQuery);
-		$CategorySatement = $CategorySatement->bindValue('id', $projectId);
-		$CategorySatement->execute();
-		return $CategorySatement->fetchAll();
-	}
+	// function getCategories($projectId){
+	// 	global $db;
+	// 	$CorrespondingCategoryQuery = "SELECT c.name FROM projects p 
+	// 							  	INNER JOIN projectscategories pc
+	// 									ON p.id = pc.projectId
+	// 								INNER JOIN categories c
+	// 									ON c.id = pc.categoryId
+	// 									WHERE p.id = :id";
+	// 	$CategorySatement = $db->prepare($CorrespondingCategoryQuery);
+	// 	$CategorySatement = $CategorySatement->bindValue('id', $projectId);
+	// 	$CategorySatement->execute();
+	// 	return $CategorySatement->fetchAll();
+	// }
 ?>
 
 <!DOCTYPE html>
