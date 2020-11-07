@@ -5,20 +5,27 @@
      * Author:  Yange Zhu
      * Date:    Nov 6, 2020
      */
-   $path = explode('?', $_SERVER['REQUEST_URI']);
-   $currentFile = basename($path[0]);
+    require_once("./db_connect.php");
 
-   if ($currentFile=="show.php") {
-    $headerTitle = $row['Title'];
-   }elseif ($currentFile=="edit.php"){
-    $headerTitle = 'Edit Post';
-   }elseif ($currentFile=="create.php") {
-    $headerTitle = 'New Post';
-   }elseif ($currentFile=="fullContent.php"){
-    $headerTitle = 'Full Blogs';
-   }else{
-    $headerTitle = 'Index';
-   }
+    $path = explode('?', $_SERVER['REQUEST_URI']);
+    $currentFile = basename($path[0]);
+
+   // if ($currentFile=="show.php") {
+   //  $headerTitle = $row['Title'];
+   // }elseif ($currentFile=="edit.php"){
+   //  $headerTitle = 'Edit Post';
+   // }elseif ($currentFile=="create.php") {
+   //  $headerTitle = 'New Post';
+   // }elseif ($currentFile=="fullContent.php"){
+   //  $headerTitle = 'Full Blogs';
+   // }else{
+   //  $headerTitle = 'Index';
+   // }
+    $getCategoryQuery = "SELECT * FROM categories";
+    $categoriesStatement = $db->prepare($getCategoryQuery);
+    $categoriesStatement->execute();
+
+
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -30,7 +37,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item active">
-        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">History</a>
@@ -58,14 +65,12 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
-                <a class="nav-link" href="#">Register</a>
+                <a class="nav-link" href="registration.php">Register</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="#">Log in</a>
             </li>
         </ul>
     </div>
-    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
   </div>
 </nav>
