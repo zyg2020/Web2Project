@@ -6,7 +6,7 @@
      * Date:    Nov 6, 2020
      */
     require_once("./db_connect.php");
-
+    session_start();
     $path = explode('?', $_SERVER['REQUEST_URI']);
     $currentFile = basename($path[0]);
 
@@ -25,7 +25,7 @@
     $categoriesStatement = $db->prepare($getCategoryQuery);
     $categoriesStatement->execute();
 
-
+    print_r($_SESSION);
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -65,10 +65,18 @@
     <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
         <ul class="navbar-nav ml-auto">
             <li class="nav-item">
+                <?php if(isset($_SESSION['username'])): ?>
+                <span class="nav-link"><?= $_SESSION['username'] ?></span>
+                <?php else: ?>
                 <a class="nav-link" href="registration.php">Register</a>
+                <?php endif ?>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Log in</a>
+                <?php if(isset($_SESSION['username'])): ?>
+                <a class="nav-link" href="logout.php">Log Off</a>
+                <?php else: ?>
+                <a class="nav-link" href="login.php">Log in</a>
+                <?php endif ?>
             </li>
         </ul>
     </div>
