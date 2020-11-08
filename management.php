@@ -1,6 +1,8 @@
 <?php
 	require("./db_connect.php");
-
+	if (session_status() == PHP_SESSION_NONE) {
+    	session_start();
+	}
     
     $getProjectQuery = "SELECT * FROM projects";
     $projectsStatement = $db->prepare($getProjectQuery);

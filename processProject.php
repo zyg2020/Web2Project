@@ -1,4 +1,7 @@
 <?php
+	if (session_status() == PHP_SESSION_NONE) {
+    	session_start();
+	}
 	$ErrorMessage = [];
 	if ($_POST && !empty($_POST['command']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['categories'])) {
 		require_once('db_connect.php');

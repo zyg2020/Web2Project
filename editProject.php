@@ -1,5 +1,6 @@
 <?php
 	require_once("./db_connect.php");
+	require('getAProjectRecord.php');
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
@@ -19,7 +20,8 @@
 	<form action="processProject.php" method="post" >
 		<?php require('formField.php') ?>
 
-	  <button type="submit" class="btn btn-primary" value="create" name="command">Submit</button>
+	  <button type="submit" class="btn btn-primary" value="update" name="command">Update</button>
+	  <button type="submit" class="btn btn-danger" value="delete" name="command">Delete</button>
 	</form>		
 	</div>
 </body>
