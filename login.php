@@ -1,12 +1,14 @@
 <?php 
 	require_once('db_connect.php');
-	session_start();
+	if (session_status() == PHP_SESSION_NONE) {
+    	session_start();
+	}
 	if ($_SERVER["REQUEST_METHOD"] === "POST" ){
 		
 		$errorMsg = '';
 
 		if (!empty($_POST['username']) && !empty($_POST['password'])) {
-			$accountsQuery = "SELECT username, password FROM users WHERE username IS NOT NULL";
+			$accountsQuery = "SELECT * FROM users WHERE username IS NOT NULL";
 			$accountsStatement = $db->prepare($accountsQuery);
 			$accountsStatement->execute();
 
@@ -16,6 +18,7 @@
 	                  $_POST['password'] == $row['password']) {
 
 	                  $_SESSION['valid'] = true;
+	              	  $_SESSION['userId'] = $row['id'];
 	                  $_SESSION['timeout'] = time();
 	                  $_SESSION['username'] = $row['username'];
 

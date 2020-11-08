@@ -6,7 +6,9 @@
      * Date:    Nov 6, 2020
      */
     require_once("./db_connect.php");
-    session_start();
+    if (session_status() == PHP_SESSION_NONE) {
+      session_start();
+    }
     $path = explode('?', $_SERVER['REQUEST_URI']);
     $currentFile = basename($path[0]);
 
@@ -24,8 +26,7 @@
     $getCategoryQuery = "SELECT * FROM categories";
     $categoriesStatement = $db->prepare($getCategoryQuery);
     $categoriesStatement->execute();
-
-    print_r($_SESSION);
+    $categories = $categoriesStatement->fetchAll();
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -47,16 +48,31 @@
           Categories
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <?php while ($row = $categoriesStatement->fetch()): ?>
-            <a class="dropdown-item" href="#"><?= $row['name'] ?></a>
-          <?php endwhile ?> 
+          <?php foreach($categories as $category): ?>
+            <a class="dropdown-item" href="#"><?= $category['name'] ?></a>
+          <?php endforeach ?>
           <!-- <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a> -->
         </div>
       </li>
-      <li class="nav-item">
-        <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Management</a>
+ <!--      <li class="nav-item">
+        <a class="nav-link 
+         " href="#" tabindex="-1" aria-disabled="true">Management</a>
+      </li> -->
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle <?php if(!isset($_SESSION['username'])){ echo 'disabled';} ?>" href="management.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Management
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="management.php">Manage All</a>
+            <a class="dropdown-item" href="newProject.php">New Project</a>
+            <a class="dropdown-item" href="#">New Category</a>
+          <!-- <div class="dropdown-divider"></div>
+          <a class="dropdown-item" href="#">Something else here</a> -->
+        </div>
       </li>
+
     </ul>
 <!--     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
