@@ -30,6 +30,8 @@
 			}else{
 				$id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
 
+				date_default_timezone_set('America/Winnipeg');
+
 				if ($_POST['command']=='create') {
 					if (!isset($_SESSION['username'])) {
 						$newVisitorQuery = "INSERT INTO users (name,userType) VALUES (:name,:userType)";
