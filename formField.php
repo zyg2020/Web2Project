@@ -13,11 +13,11 @@
 		foreach ($categoryRows as $key => $value) {
 			array_push($associatedCategories, $value['id']); 
 		}
-		print_r($categoryRows);
-		echo '<br>';
-		print_r($row);
-		echo '<br>';
-		print_r($associatedCategories);
+		// print_r($categoryRows);
+		// echo '<br>';
+		// print_r($row);
+		// echo '<br>';
+		// print_r($associatedCategories);
 	}
 	
 ?>
@@ -25,8 +25,9 @@
 <div class="form-group">
     <label for="title">Title</label>
     <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" <?php if($hasId): ?>
-										 value="<?= $row['title'] ?>"
-									<?php endif ?> />
+					 value="<?= $row['title'] ?>"
+				<?php endif ?> />
+	<input type="hidden" name="id" value="<?= $row['id'] ?>" />
   </div>
   <div class="form-group">
     <label for="url">URL</label>

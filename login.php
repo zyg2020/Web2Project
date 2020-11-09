@@ -31,22 +31,21 @@
 	                  $loginSucceed = true;
 	                  break;     
 				}
-
-				print_r($row['username']);
 			}
 
 			if (!$loginSucceed) {
 				$errorMsg = 'Wrong username or password';
 			}
+
+
+			if (!$errorMsg) {
+				header("Location: management.php");
+        		exit;
+			}
 		}else{
 			$errorMsg = 'Please fill out form.';
 		}
 	}
-
-		// 	print_r($_SESSION);
-		// print_r($errorMsg);
-		// print_r($loginSucceed);
-	
 ?>
 
 <!DOCTYPE html>
