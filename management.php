@@ -1,5 +1,11 @@
 <?php
 	require("./db_connect.php");
+
+	if(!isset($_SESSION['username'])) {
+		header("Location: index.php");
+    	exit;
+	}
+
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}

@@ -42,7 +42,6 @@
 			array_push($ErrorMessage, 'Please input valid description');
 		}
 
-
 		date_default_timezone_set('America/Winnipeg');
 
 		if (!$ErrorMessage && $_POST['command']=='create') {
