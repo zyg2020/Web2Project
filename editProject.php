@@ -4,6 +4,11 @@
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
+	if(!isset($_SESSION['username'])) {
+		header("Location: index.php");
+    	exit;
+	}
+	print_r($_GET);
 ?>
 
 <!DOCTYPE html>

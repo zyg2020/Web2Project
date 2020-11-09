@@ -2,6 +2,9 @@
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
+
+print_r($_POST);
+
 	$ErrorMessage = [];
 	if ($_POST && !empty($_POST['command']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['categories'])) {
 		require_once('db_connect.php');
@@ -78,13 +81,14 @@
 				$id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
 
 				if ($_POST['command']=='update'){
-					$updateQuery = "UPDATE projects SET title = :title, url = :url, imagePath = :imagePath, description = :description, updatedTimestamp = :updatedTimestamp LIMIT 1";
+					$updateQuery = "UPDATE projects SET title = :title, url = :url, imagePath = :imagePath, description = :description, updatedTimestamp = :updatedTimestamp WHERE id = :id LIMIT 1";
 					$statement = $db->prepare($updateQuery);
 					$values = ['title' => $title,
 							'url' => $url,
 							'description' => $description,
 							'imagePath' => $image,
-							'updatedTimestamp' => date('Y-m-d H:i:s',strtotime("now"))];
+							'updatedTimestamp' => date('Y-m-d H:i:s',strtotime("now")),
+							'id' => $id];
 					$statement->execute($values);
 
 					$deleteCategory = "DELETE FROM projectscategories WHERE projectId = :projectId";
@@ -113,8 +117,8 @@
 		}
 
 		if (!$ErrorMessage) {
-			header("Location: management.php");
-        	exit;
+			// header("Location: management.php");
+   //      	exit;
 		}else{
 			print_r($ErrorMessage);
 		}

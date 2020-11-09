@@ -67,7 +67,7 @@
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="management.php">Manage All</a>
             <a class="dropdown-item" href="newProject.php">New Project</a>
-            <a class="dropdown-item" href="#">New Category</a>
+            <a class="dropdown-item" href="newCategory.php">New Category</a>
           <!-- <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a> -->
         </div>

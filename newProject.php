@@ -4,6 +4,11 @@
     	session_start();
 	}
 
+	if(!isset($_SESSION['username'])) {
+		header("Location: index.php");
+    	exit;
+	}
+
 	// if ($_POST) {
 	// 	$ErrorMessage = [];
 	// 	if ($_POST && !empty($_POST['command']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['categories'])) {
