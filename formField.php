@@ -2,8 +2,9 @@
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
-	$hasId = isset($_GET['id']) && !empty($_GET['id']);
+	$hasId = isset($_GET['id']) && !empty($_GET['id']) && filter_var($_GET['id'], FILTER_VALIDATE_INT);
 	if ($hasId) {
+
 		$getCategoriesForIdQuery = "SELECT c.id FROM projects p INNER JOIN projectscategories pc ON p.id = pc.projectId INNER JOIN categories c ON c.id = pc.categoryId WHERE p.id = " . $_GET['id'];
 		$statement = $db->prepare($getCategoriesForIdQuery);
 		$statement->execute();

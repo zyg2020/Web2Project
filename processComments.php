@@ -56,8 +56,8 @@
 					$statement->execute($bindValues);
 				}
 
-				header("Location: index.php");
-    			exit;
+				header('Location: ' . $_SERVER["HTTP_REFERER"] );
+				exit;
 			}
 		}
 	}

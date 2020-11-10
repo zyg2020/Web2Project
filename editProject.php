@@ -8,7 +8,6 @@
 		header("Location: index.php");
     	exit;
 	}
-	print_r($_GET);
 ?>
 
 <!DOCTYPE html>

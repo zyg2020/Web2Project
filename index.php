@@ -39,8 +39,8 @@
 	</script>
 </head>
 <body>
-	<?php require("./header.php") ?>
 	<div class="container box">
+		<?php require("./header.php") ?>
 		<?php require('projectsAndComments.php') ?>
 	</div>
 </body>

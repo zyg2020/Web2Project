@@ -43,13 +43,24 @@
 		    });
 		}); 
 	</script>
+	<style type="text/css">
+		a.categoryDelete{
+			float: right;
+			position: relative;
+		}
+		a.categoryUpdate{
+			float: right;
+			position: relative;
+			left: -5px;
+		}
+	</style>
 </head>
 <body>
 	<div class="container box">
 		<?php require("./header.php") ?>
 		<ul class="list-group">
 			<?php foreach($categories as $category): ?>
-			<li class="list-group-item list-group-item-action"><?= $category['name'] ?></li>
+			<li class="list-group-item list-group-item-action"> <span><?= $category['name'] ?></span>  <a href="" class="badge badge-danger categoryDelete">Delete</a><a href="category.php?id=<?= $category['id'] ?>" class="badge badge-primary categoryUpdate r-5">Update</a></li>
 			<?php endforeach ?>
 		</ul>
 		
