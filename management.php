@@ -10,6 +10,12 @@
     	exit;
 	}
 
+	$sort = "";
+	if(isset($_POST["sort"]) && !empty($_POST["sort"])){ 
+		$sort = filter_input(INPUT_POST, 'sort', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+	}
+
+
 	// $myPDO = MyPDO::getInstance();
 	// function getCategories($projectId){
 	// 	global $db;
@@ -42,6 +48,11 @@
 		        $("#form_"+event.target.id).toggle();
 		    });
 		}); 
+		function autoSubmit()
+		{
+		    var formObject = document.forms['theForm'];
+		    formObject.submit();
+		}
 	</script>
 	<style type="text/css">
 		a.categoryDelete{
@@ -58,30 +69,27 @@
 <body>
 	<div class="container box">
 		<?php require("./header.php") ?>
+
+		<form name='theForm' id='theForm' method="post">
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="sort" id="orderByCreated" <?php if ($sort == 'createdTimestamp'): ?>checked='checked' <?php endif ?>value="createdTimestamp" onChange="autoSubmit();">
+  				<label class="form-check-label" for="orderByCreated">Created Time</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="sort" id="inlineRadio2" <?php if ($sort == 'updatedTimestamp'): ?>checked='checked' <?php endif ?>value="updatedTimestamp" onChange="autoSubmit();">
+  				<label class="form-check-label" for="inlineRadio2">Updated Time</label>
+			</div>
+			<div class="form-check form-check-inline">
+				<input class="form-check-input" type="radio" name="sort" id="inlineRadio3" <?php if ($sort == 'title'): ?>checked='checked' <?php endif ?>value="title" onChange="autoSubmit();">
+  				<label class="form-check-label" for="inlineRadio3">Title</label>
+			</div>
+		</form>
+
 		<ul class="list-group">
 			<?php foreach($categories as $category): ?>
 			<li class="list-group-item list-group-item-action"> <span><?= $category['name'] ?></span>  <a href="" class="badge badge-danger categoryDelete">Delete</a><a href="category.php?id=<?= $category['id'] ?>" class="badge badge-primary categoryUpdate r-5">Update</a></li>
 			<?php endforeach ?>
 		</ul>
-		
-<div class="row">
-  <div class="col-4">
-    <div class="list-group" id="list-tab" role="tablist">
-      <a class="list-group-item list-group-item-action active" id="list-home-list" data-toggle="list" href="#list-home" role="tab" aria-controls="home">Home</a>
-      <a class="list-group-item list-group-item-action" id="list-profile-list" data-toggle="list" href="#list-profile" role="tab" aria-controls="profile">Profile</a>
-      <a class="list-group-item list-group-item-action" id="list-messages-list" data-toggle="list" href="#list-messages" role="tab" aria-controls="messages">Messages</a>
-      <a class="list-group-item list-group-item-action" id="list-settings-list" data-toggle="list" href="#list-settings" role="tab" aria-controls="settings">Settings</a>
-    </div>
-  </div>
-  <div class="col-8">
-    <div class="tab-content" id="nav-tabContent">
-      <div class="tab-pane fade show active" id="list-home" role="tabpanel" aria-labelledby="list-home-list">...</div>
-      <div class="tab-pane fade" id="list-profile" role="tabpanel" aria-labelledby="list-profile-list">...</div>
-      <div class="tab-pane fade" id="list-messages" role="tabpanel" aria-labelledby="list-messages-list">...</div>
-      <div class="tab-pane fade" id="list-settings" role="tabpanel" aria-labelledby="list-settings-list">...</div>
-    </div>
-  </div>
-</div>
 		<?php require('projectsAndComments.php') ?>
 	</div>
 </body>

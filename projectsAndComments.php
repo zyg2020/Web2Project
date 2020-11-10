@@ -9,6 +9,30 @@
 	}
 
 	$getProjectQuery = "SELECT * FROM projects";
+
+	if (isset($categoryName) && !empty($categoryName)) {
+		$validCategory = false;
+		foreach($categories as $oneCategory){
+			if (strtolower($oneCategory['name']) == strtolower($categoryName) ) {
+			 	$validCategory = true;
+			 	$categoryId = $oneCategory['id'];
+			 } 
+		}
+
+		if ($validCategory && $categoryId) {
+			$getProjectQuery = "SELECT * FROM projects p INNER JOIN projectscategories pc ON p.id = pc.projectId WHERE pc.categoryId = " . $categoryId;
+		}
+	}
+
+
+
+	if (isset($sort) && !empty($sort)) {
+		$getProjectQuery = $getProjectQuery . " ORDER BY " . $sort;
+
+		if ($sort != 'title') {
+			$getProjectQuery = $getProjectQuery . " DESC";
+		}
+	}
     $projectsStatement = $db->prepare($getProjectQuery);
     $projectsStatement->execute();
 ?>
@@ -79,7 +103,7 @@
 		<h4><a style="color: inherit;" href="showComment.php?id=<?= $commentRow['id'] ?>"><?= $commentRow['name'] ?></a></h4>
 		<p>
             <small>
-              <?= date("F d, Y, g:i a",strtotime($commentRow['createdTimestamp'])) ?> -
+              <?= date("F d, Y, g:i a",strtotime($commentRow['createdTimestamp'])) ?>
              <!--  <a href="edit.php?id=<?= $commentRow['id'] ?>">editssssss</a> -->
             </small>
         </p>

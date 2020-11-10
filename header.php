@@ -30,7 +30,7 @@
 ?>
 
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <a class="navbar-brand" href="#">ABC Interactive</a>
+  <a class="navbar-brand" href="index.php">ABC Interactive</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>
@@ -49,7 +49,7 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
           <?php foreach($categories as $category): ?>
-            <a class="dropdown-item" href="#"><?= $category['name'] ?></a>
+            <a class="dropdown-item" href="aTypeProject.php?category=<?= urlencode($category['name']) ?>"><?= $category['name'] ?></a>
           <?php endforeach ?>
           <!-- <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a> -->

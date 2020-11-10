@@ -26,9 +26,11 @@
 <div class="form-group">
     <label for="title">Title</label>
     <input type="text" class="form-control" id="title" name="title" aria-describedby="emailHelp" <?php if($hasId): ?>
-					 value="<?= $row['title'] ?>"
-				<?php endif ?> />
+					 value="<?= $row['title'] ?>" 
+					 <?php endif ?>/>
+	<?php if($hasId): ?>
 	<input type="hidden" name="id" value="<?= $row['id'] ?>" />
+	<?php endif ?>
   </div>
   <div class="form-group">
     <label for="url">URL</label>

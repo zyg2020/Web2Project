@@ -68,6 +68,8 @@
 				];
 			$statement->execute($bindValues);
 
+			header("Location: login.php");
+        	exit;
 		}
 	}
 
@@ -108,11 +110,11 @@
 				</div>
 		         <div class="form-group required">
 		            <label for="password" >Password</label>
-		            <input type="text" id="password" name="password" placeholder="Enter Password Here.." class="form-control">
+		            <input type="password" id="password" name="password" placeholder="Enter Password Here.." class="form-control">
 		         </div>
 		         <div class="form-group required">
 		            <label for="confirmedPassword">Confirmed Password</label>
-		            <input type="text" id="confirmedPassword" name="confirmedPassword" placeholder="Enter Password Here Again.." class="form-control">
+		            <input type="password" id="confirmedPassword" name="confirmedPassword" placeholder="Enter Password Here Again.." class="form-control">
 		         </div>
 		         <div class="row form-group required">
 		            <div class="col-sm-6 form-group">

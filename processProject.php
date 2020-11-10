@@ -3,8 +3,6 @@
     	session_start();
 	}
 
-print_r($_POST);
-
 	$ErrorMessage = [];
 	if ($_POST && !empty($_POST['command']) && !empty($_POST['title']) && !empty($_POST['description']) && !empty($_POST['categories'])) {
 		require_once('db_connect.php');
@@ -53,7 +51,6 @@ print_r($_POST);
 			$insertStatement=$db->prepare($insertQuery);
 
 			$userId = $_SESSION['userId'];
-			echo $userId;
 			$values = [':title' => $title,
 							':url' => $url,
 							':description' => $description,
@@ -72,7 +69,7 @@ print_r($_POST);
 				$ProjectsCategoriesStatement->execute($values);
 			}
 		}
-
+		print_r($_POST);
 		if (!$ErrorMessage && isset($_POST['id'])) {
 			$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 			if (!$id) {
@@ -117,8 +114,8 @@ print_r($_POST);
 		}
 
 		if (!$ErrorMessage) {
-			// header("Location: management.php");
-   //      	exit;
+			header("Location: management.php");
+        	exit;
 		}else{
 			print_r($ErrorMessage);
 		}
