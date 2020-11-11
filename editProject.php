@@ -21,7 +21,7 @@
 <body>
 	<div class="container box">
 		<?php require("./header.php") ?>
-	<form action="processProject.php" method="post" >
+	<form action="processProject.php" method="post" enctype="multipart/form-data">
 		<?php require('formField.php') ?>
 
 	  <button type="submit" class="btn btn-primary" value="update" name="command">Update</button>

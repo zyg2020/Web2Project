@@ -1,0 +1,14 @@
+{
+    "name": "yange/web2project",
+    "description": "A CMS content management system used by various developers to show their projects.",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Yange Zhu",
+            "email": "zhuyange2018@gmail.com"
+        }
+    ],
+    "require": {
+        "gumlet/php-image-resize": "2.0.*"
+    }
+}

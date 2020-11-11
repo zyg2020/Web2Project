@@ -24,8 +24,6 @@
 		}
 	}
 
-
-
 	if (isset($sort) && !empty($sort)) {
 		$getProjectQuery = $getProjectQuery . " ORDER BY " . $sort;
 
@@ -38,7 +36,22 @@
 ?>
 
 <?php while ($row = $projectsStatement->fetch()): ?> 
-<section>
+<section style="overflow: hidden;">
+<?php 
+	require_once('functions.php');
+?>
+	<?php if(isset($row['imagePath']) && !empty($row['imagePath'])): 
+				$threeImages = changeToThreeRelativePath($row['imagePath']);?>
+	<div style="float: right;">
+		<a href="<? $threeImages['origin'] ?>" alt="aaaa" class = "large">
+		<?php if($isManagementPage): ?>
+			<img src="<?= $threeImages['thumbnail'] ?>" alt="<?= $row['title'] ?>" >
+		<?php else: ?>
+			<img src="<?= $threeImages['medium'] ?>" alt="<?= $row['title'] ?>" >
+		<?php endif; ?>">
+		</a>
+	</div>
+	<?php endif ?>
 	<h2><a style="color: inherit;" href="showProject.php?id=<?= $row['id'] ?>"><?= $row['title'] ?></a></h2>
 	<h6 class="font-italic text-success">
 		<?php $CorrespondingCategoryQuery = "SELECT c.name FROM projects p INNER JOIN projectscategories pc ON p.id = pc.projectId INNER JOIN categories c ON c.id = pc.categoryId WHERE p.id = " . $row['id'];
@@ -67,7 +80,7 @@
     <?php endif ?>
 
     <?php if($row['url']): ?>
-    <a href="<?= $row['url'] ?>">Link</a>
+    <div><a href="<?= $row['url'] ?>">Link</a></div>
 	<?php endif ?>
 	<a href="editProject.php?id=<?= $row['id'] ?>" class="btn btn-primary .btn-xs  <?php if($isManagementPage) {
 				echo 'active showButton';
@@ -91,7 +104,7 @@
 	</form>	
 
 </section>
-<div>
+<div >
 	<?php 
 	    $getComments = "SELECT c.id id, c.content content, c.createdTimestamp createdTimestamp, u.id userId, u.name name FROM comments c INNER JOIN users u ON u.id = c.userId WHERE projectId = :projectId ORDER BY c.createdTimestamp DESC";
 		$statement = $db->prepare($getComments);
@@ -99,7 +112,7 @@
 	    $statement->execute();
 	?>
 	<?php while($commentRow = $statement->fetch()): ?>
-	<div>
+	<div class="border border-dark m-3">
 		<h4><a style="color: inherit;" href="showComment.php?id=<?= $commentRow['id'] ?>"><?= $commentRow['name'] ?></a></h4>
 		<p>
             <small>
@@ -118,3 +131,6 @@
 	<?php endwhile ?>
 </div>
 <?php endwhile ?>
+<script>
+	new LuminousGallery(document.querySelectorAll("div a.large"));
+</script>

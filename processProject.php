@@ -1,4 +1,5 @@
 <?php
+	require_once('functions.php');
 	if (session_status() == PHP_SESSION_NONE) {
     	session_start();
 	}
@@ -34,7 +35,33 @@
 		$description = filter_input(INPUT_POST, 'description', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$title = filter_input(INPUT_POST, 'title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		$url = filter_input(INPUT_POST, 'url', FILTER_SANITIZE_URL);
-		$image = filter_input(INPUT_POST, 'image', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+
+		$deleteImage = filter_input(INPUT_POST, 'deleteImage', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+		$imagePath = '';
+
+    	$image_upload_detected = isset($_FILES['image']) && ($_FILES['image']['error'] === 0);
+    	$upload_error_detected = isset($_FILES['image']) && ($_FILES['image']['error'] > 0);
+
+    	if ($upload_error_detected && ($_FILES['image']['error'] != 4)) {
+    		array_push($ErrorMessage, $_FILES['image']['error']);
+    	}
+
+    	require('imageUpload.php');
+    	if ($image_upload_detected) {
+
+	        $image_filename        = $_FILES['image']['name'];
+	        $temporary_image_path  = $_FILES['image']['tmp_name'];
+	        $new_image_path        = file_upload_path($image_filename);
+
+	        if (file_is_an_image($temporary_image_path, $new_image_path)) {
+                move_uploaded_file($temporary_image_path, $new_image_path);
+                resize($new_image_path, 400);
+                resize($new_image_path, 50);	
+                $imagePath = $new_image_path;            
+	        }else{
+	        	array_push($ErrorMessage, 'Uploaded file is not an image.');
+	        }
+    	}
 
 		if (!$title) {
 			array_push($ErrorMessage, 'Please input valid title');
@@ -54,7 +81,7 @@
 			$values = [':title' => $title,
 							':url' => $url,
 							':description' => $description,
-							':imagePath' => $image,
+							':imagePath' => $imagePath,
 							':createdTimestamp' => date('Y-m-d H:i:s',strtotime("now")),
 							':userId' => $userId ];
 			$result = $insertStatement->execute($values);
@@ -69,7 +96,7 @@
 				$ProjectsCategoriesStatement->execute($values);
 			}
 		}
-		print_r($_POST);
+
 		if (!$ErrorMessage && isset($_POST['id'])) {
 			$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 			if (!$id) {
@@ -77,15 +104,49 @@
 			}else{
 				$id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
 
+				if ($_POST['command']!=='create' && ($_POST['command']=='delete' || $deleteImage === "delete" || (isset($imagePath) && !empty($imagePath)))) {
+					$getImagePathQuery = "SELECT imagePath FROM projects WHERE id = :id LIMIT 1";
+					$imageStatement = $db->prepare($getImagePathQuery);
+					$imageStatement->bindValue(':id', $id, PDO::PARAM_INT);
+					$imageStatement->execute();
+					$oldImagePath = ($imageStatement->fetch())['imagePath'];
+
+					if ($oldImagePath) {
+						$threeOldImages = changeToThreeRelativePath($oldImagePath);
+						foreach ($threeOldImages as $key => $value) {
+							$result = unlink($value);
+						}
+						
+					}				
+					if (isset($result) && !$result) {
+						array_push($ErrorMessage, 'Error occurred when deleting image file.');
+					}
+
+				}				
+
 				if ($_POST['command']=='update'){
-					$updateQuery = "UPDATE projects SET title = :title, url = :url, imagePath = :imagePath, description = :description, updatedTimestamp = :updatedTimestamp WHERE id = :id LIMIT 1";
+					$updateQuery = "UPDATE projects SET title = :title, url = :url, description = :description, updatedTimestamp = :updatedTimestamp";
+
+					if ((isset($imagePath) && !empty($imagePath)) || $deleteImage === "delete") {
+						$updateQuery .= ", imagePath = :imagePath";
+					}
+
+					$updateQuery .= " WHERE id = :id LIMIT 1";
 					$statement = $db->prepare($updateQuery);
 					$values = ['title' => $title,
 							'url' => $url,
 							'description' => $description,
-							'imagePath' => $image,
 							'updatedTimestamp' => date('Y-m-d H:i:s',strtotime("now")),
 							'id' => $id];
+
+					if ($deleteImage === "delete") {						
+						$imageBind = ['imagePath' => null];
+						$values = array_merge($values, $imageBind);
+					}elseif (isset($imagePath) && !empty($imagePath)) {
+						$imageBind = ['imagePath' => $imagePath];
+						$values = array_merge($values, $imageBind);
+					}
+
 					$statement->execute($values);
 
 					$deleteCategory = "DELETE FROM projectscategories WHERE projectId = :projectId";
@@ -116,8 +177,6 @@
 		if (!$ErrorMessage) {
 			header("Location: management.php");
         	exit;
-		}else{
-			print_r($ErrorMessage);
 		}
 	}elseif ($_POST && !empty($_POST['command'])) {
 		if (empty($_POST['title'])) {
