@@ -1,9 +1,9 @@
-drop table `accounts`;
-drop TABLE `comments`;
-drop TABLE `users`;
 drop TABLE `projectsCategories`;
 drop TABLE `categories`;
+drop TABLE `comments`;
 drop TABLE `projects`;
+drop TABLE `users`;
+--drop table `accounts`;
 
 CREATE TABLE IF NOT EXISTS `users` (
     `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS `users` (
     `title` varchar(30) COLLATE utf8_unicode_ci,
     `branchOfficeName` varchar(30) COLLATE utf8_unicode_ci,
     `username` varchar(30) COLLATE utf8_unicode_ci,
-    `password` varchar(30) COLLATE utf8_unicode_ci,
+    `password` varchar(65) COLLATE utf8_unicode_ci,
     `isAdministrator` int(11) DEFAULT 0,
     PRIMARY KEY (`id`)
 );
@@ -34,7 +34,7 @@ CREATE TABLE IF NOT EXISTS `projects` (
     PRIMARY KEY (`id`),
     CONSTRAINT `ownFK` FOREIGN KEY (`userId`)
         REFERENCES `users` (`id`)
-        ON DELETE CASCADE
+        ON DELETE SET NULL
 );
 
 CREATE TABLE IF NOT EXISTS `categories` (
@@ -73,32 +73,32 @@ CREATE TABLE IF NOT EXISTS `comments` (
         ON DELETE CASCADE
 );
 
-CREATE TABLE IF NOT EXISTS `accounts` (
-    `id` int(11) NOT NULL AUTO_INCREMENT,
-    `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-    `password` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-    `isAdministrator` int(1) NOT NULL,
-    `userId` int(11) NOT NULL,
-    PRIMARY KEY (`id`),
-    CONSTRAINT `createdFK` FOREIGN KEY (`userId`)
-        REFERENCES `users` (`id`)
-        ON DELETE CASCADE
-);
+-- CREATE TABLE IF NOT EXISTS `accounts` (
+--     `id` int(11) NOT NULL AUTO_INCREMENT,
+--     `username` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+--     `password` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+--     `isAdministrator` int(1) NOT NULL,
+--     `userId` int(11) NOT NULL,
+--     PRIMARY KEY (`id`),
+--     CONSTRAINT `createdFK` FOREIGN KEY (`userId`)
+--         REFERENCES `users` (`id`)
+--         ON DELETE CASCADE
+-- );
 
-INSERT INTO `users`(`name`, `userType`, `username`, `password`) VALUES 
-('admin', 'administrator', 'zyg051532931225', 'zyg051532931225'),
-('Yange Zhu User', 'user', 'zyg051532931225', 'zyg051532931225'),
-('Yange Zhu visitor', '', '', '');
+-- INSERT INTO `users`(`name`, `userType`, `username`, `password`) VALUES 
+-- ('admin', 'administrator', 'zyg051532931225', 'zyg051532931225'),
+-- ('Yange Zhu User', 'user', 'zyg051532931225', 'zyg051532931225'),
+-- ('Yange Zhu visitor', '', '', '');
 
 INSERT INTO `projects` (`title`,`description`, `userId`) VALUES
-    ('windows form application', 'windows form application description', 2),
-    ('php application', 'php application description', 2),
-    ('javscript application', 'javscript application description', 2),
-    ('java application', 'java application description', 2),
-    ('windows form application', 'windows form application description', 2),
-    ('c sharp application', 'c sharp application description', 2),
-    ('asp.net application', 'asp.net application description', 2),
-    ('php and javascript application', 'php and javascript application description', 2);
+    ('windows form application', 'windows form application description', 1),
+    ('php application', 'php application description', 1),
+    ('javscript application', 'javscript application description', 1),
+    ('java application', 'java application description', 1),
+    ('windows form application', 'windows form application description', 1),
+    ('c sharp application', 'c sharp application description', 1),
+    ('asp.net application', 'asp.net application description', 1),
+    ('php and javascript application', 'php and javascript application description', 1);
 
 -- INSERT INTO `projects` (`id`, `title`, `createdTimestamp`, `updatedTimestamp`, `description`, `url`, `imagePath`) VALUES
 -- (1, 'windows form application', '2020-11-07 04:03:27', '2020-11-07 04:03:27', 'windows form application description', NULL, NULL),
@@ -134,3 +134,13 @@ INSERT INTO `projectscategories`(`projectId`, `categoryId`) VALUES
 --     ADD CONSTRAINT `containFK` FOREIGN KEY (`categoryId`)
 --         REFERENCES `categories` (`id`)
 --         ON DELETE CASCADE;
+
+-- INSERT INTO `projects` (`title`,`description`, `userId`) VALUES
+--     ('windows form application', 'windows form application description', 6),
+--     ('php application', 'php application description', 6),
+--     ('javscript application', 'javscript application description', 6),
+--     ('java application', 'java application description', 6),
+--     ('windows form application', 'windows form application description', 6),
+--     ('c sharp application', 'c sharp application description', 6),
+--     ('asp.net application', 'asp.net application description', 6),
+--     ('php and javascript application', 'php and javascript application description', 6);

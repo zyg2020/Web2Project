@@ -117,7 +117,6 @@
 		<p>
             <small>
               <?= date("F d, Y, g:i a",strtotime($commentRow['createdTimestamp'])) ?>
-             <!--  <a href="edit.php?id=<?= $commentRow['id'] ?>">editssssss</a> -->
             </small>
         </p>
         <?php if(strlen($commentRow['content']) > 200 ): ?>

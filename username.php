@@ -16,7 +16,7 @@
 	    while ($row = $usernameStatement->fetch()) {
 	    	if (strtolower($username) == strtolower($row['username'])) {
 	    	 	$response['usernameAvailable'] = false;
-	    	 }els{
+	    	 }else{
 	    	 	$response['success'] = true;
 	    	 } 
 	    }

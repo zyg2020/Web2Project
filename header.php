@@ -6,23 +6,11 @@
      * Date:    Nov 6, 2020
      */
     require_once("./db_connect.php");
+    require_once("functions.php");
     if (session_status() == PHP_SESSION_NONE) {
       session_start();
     }
-    $path = explode('?', $_SERVER['REQUEST_URI']);
-    $currentFile = basename($path[0]);
 
-   // if ($currentFile=="show.php") {
-   //  $headerTitle = $row['Title'];
-   // }elseif ($currentFile=="edit.php"){
-   //  $headerTitle = 'Edit Post';
-   // }elseif ($currentFile=="create.php") {
-   //  $headerTitle = 'New Post';
-   // }elseif ($currentFile=="fullContent.php"){
-   //  $headerTitle = 'Full Blogs';
-   // }else{
-   //  $headerTitle = 'Index';
-   // }
     $getCategoryQuery = "SELECT * FROM categories";
     $categoriesStatement = $db->prepare($getCategoryQuery);
     $categoriesStatement->execute();
@@ -37,14 +25,14 @@
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav mr-auto">
-      <li class="nav-item active">
+      <li class="nav-item <?php isActive('index.php') ?>">
         <a class="nav-link" href="index.php">Home <span class="sr-only">(current)</span></a>
       </li>
       <li class="nav-item">
         <a class="nav-link" href="#">History</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <?php isActive('aTypeProject.php') ?>" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Categories
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -61,11 +49,13 @@
       </li> -->
 
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle <?php if(!isset($_SESSION['username'])){ echo 'disabled';} ?>" href="management.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <?php if(!isset($_SESSION['username'])){ echo 'disabled';} isActive(['management.php','users.php','newProject.php','category.php']); ?>" href="management.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Management
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="management.php">Manage All</a>
+            <a class="dropdown-item" href="users.php">Manage Users</a>
+            <a class="dropdown-item" href="editUsers.php">New Users</a>
             <a class="dropdown-item" href="newProject.php">New Project</a>
             <a class="dropdown-item" href="category.php">New Category</a>
           <!-- <div class="dropdown-divider"></div>
@@ -76,22 +66,22 @@
     </ul>
 <!--     <form class="form-inline my-2 my-lg-0">
       <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+      <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>               navbar-collapse collapse  dual-collapse2  w-100 navbar-right nav-item dropdown
     </form> -->
-    <div class="navbar-collapse collapse w-100 order-3 dual-collapse2">
-        <ul class="navbar-nav ml-auto">
-            <li class="nav-item">
+    <div>
+        <ul class=" navbar-nav ml-auto">
+            <li class="nav-item <?php isActive('registration.php') ?>">
                 <?php if(isset($_SESSION['username'])): ?>
                 <span class="nav-link"><?= $_SESSION['username'] ?></span>
                 <?php else: ?>
-                <a class="nav-link" href="registration.php">Register</a>
+                <a class="nav-link" href="editUsers.php">Register</a>
                 <?php endif ?>
             </li>
             <li class="nav-item">
                 <?php if(isset($_SESSION['username'])): ?>
                 <a class="nav-link" href="logout.php">Log Off</a>
                 <?php else: ?>
-                <a class="nav-link" href="login.php">Log in</a>
+                <a class="nav-link <?php isActive('login.php') ?>" href="login.php">Log in</a>
                 <?php endif ?>
             </li>
         </ul>

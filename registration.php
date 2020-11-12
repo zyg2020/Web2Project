@@ -64,7 +64,7 @@
 				'title'=>$title,
 				'branchOfficeName'=>$branchOffice,
 				'username'=>$username,
-				'password'=>$password
+				'password'=>password_hash($password, PASSWORD_BCRYPT)
 				];
 			$statement->execute($bindValues);
 
@@ -73,6 +73,21 @@
 		}
 	}
 
+	$output = [];
+	$showUserInfo = false;
+	if (count($_GET)>0 && filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT)) {
+		$id = filter_input(INPUT_GET, 'id', FILTER_SANITIZE_NUMBER_INT);
+		try{
+			$userQuery = "SELECT * FROM users WHERE id = :id";
+			$userStatement = $db->prepare($userQuery);
+			$userStatement->bindValue(':id', $id, PDO::PARAM_INT);
+			$imageStatement->execute();
+			$selectedUserRow = $imageStatement->fetch();
+			$showUserInfo = true;
+		}catch (Exception $e) {
+			array_push($output, ['databaseError' => $e->getMessage()]);
+		}
+	}
 ?>
 <!DOCTYPE html>
 <html>

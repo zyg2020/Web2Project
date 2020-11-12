@@ -8,44 +8,48 @@
 		$errorMsg = '';
 
 		if (!empty($_POST['username']) && !empty($_POST['password'])) {
-			$accountsQuery = "SELECT * FROM users WHERE username IS NOT NULL";
-			$accountsStatement = $db->prepare($accountsQuery);
-			$accountsStatement->execute();
+			$username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+			$hasValidInput = $username && $password;
 
-			$loginSucceed = false;
-			while ($row = $accountsStatement->fetch()){
-				if (strcasecmp($_POST['username'], $row['username']) === 0 && 
-	                  $_POST['password'] == $row['password']) {
+			if ($hasValidInput) {
+				$accountsQuery = "SELECT * FROM users WHERE username IS NOT NULL";
+				$accountsStatement = $db->prepare($accountsQuery);
+				$accountsStatement->execute();
 
-	                  $_SESSION['valid'] = true;
-	              	  $_SESSION['userId'] = $row['id'];
-	                  $_SESSION['timeout'] = time();
-	                  $_SESSION['username'] = $row['username'];
+				$loginSucceed = false;
+				while ($row = $accountsStatement->fetch()){
+					if (strcasecmp($username, $row['username']) === 0 && 
+		                  password_verify($password , $row['password'])) {
 
-	                  if (strcasecmp($row['userType'], 'administrator') !== 0 ) {
-	                  	$_SESSION['isAdministrator'] = false;
-	                  }else{
-	                  	$_SESSION['isAdministrator'] = true;
-	                  } 
+		                  $_SESSION['valid'] = true;
+		              	  $_SESSION['userId'] = $row['id'];
+		                  $_SESSION['timeout'] = time();
+		                  $_SESSION['username'] = $row['username'];
 
-	                  $loginSucceed = true;
-	                  break;     
+		                  if (strcasecmp($row['userType'], 'administrator') !== 0 ) {
+		                  	$_SESSION['isAdministrator'] = false;
+		                  }else{
+		                  	$_SESSION['isAdministrator'] = true;
+		                  } 
+
+		                  $loginSucceed = true;
+		                  break;     
+					}
 				}
-			}
+				if (!$loginSucceed) {
+					$errorMsg = 'Wrong username or password';
+				}
 
-			if (!$loginSucceed) {
-				$errorMsg = 'Wrong username or password';
-			}
-
-
-			if (!$errorMsg) {
-				header("Location: management.php");
-        		exit;
-			}
+				if (!$errorMsg) {
+					header("Location: management.php");
+	        		exit;
+				}
 		}else{
 			$errorMsg = 'Please fill out form.';
 		}
 	}
+}
 ?>
 
 <!DOCTYPE html>
@@ -73,7 +77,7 @@
                             </div>
                             <div class="form-group">
                                 <label for="password" class="text-info text-dark">Password:</label><br>
-                                <input type="text" name="password" id="password" class="form-control">
+                                <input type="password" name="password" id="password" class="form-control">
                             </div>
                             <div class="form-group">
                                 <label for="remember-me" class="text-info text-dark"><span>Remember me</span> <span><input id="remember-me" name="remember-me" type="checkbox"></span></label><br>
