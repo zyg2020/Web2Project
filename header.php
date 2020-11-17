@@ -32,7 +32,7 @@
         <a class="nav-link" href="#">History</a>
       </li>
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle <?php isActive('aTypeProject.php') ?>" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <?php isActive('aTypeProject.php') ?>" href="#"  role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Categories
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -49,7 +49,7 @@
       </li> -->
 
       <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle <?php if(!isset($_SESSION['username'])){ echo 'disabled';} isActive(['management.php','users.php','newProject.php','category.php']); ?>" href="management.php" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+        <a class="nav-link dropdown-toggle <?php if(!isset($_SESSION['username'])){ echo 'disabled';} isActive(['management.php','users.php','newProject.php','category.php']); ?>" href="management.php" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
           Management
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
@@ -61,6 +61,29 @@
           <!-- <div class="dropdown-divider"></div>
           <a class="dropdown-item" href="#">Something else here</a> -->
         </div>
+      </li>
+
+      <li class="nav-item <?php isActive('index.php') ?>">
+        <form class="form-inline" method="post" action="search.php">
+          <input class="form-control" type="search" id="searchWord" name="searchWord" placeholder="Search" aria-label="Search">
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" 
+              id="sampleDropdownMenu" data-toggle="dropdown">
+              Categories
+              </button>
+              <div class="dropdown-menu" >
+
+                <?php foreach($categories as $category): ?>
+                  <div>
+                    <input style="display: inline-block;" type="checkbox" name="searchCategories[]" id="<?= $category['name'] . $category['id'] ?>" value="<?= $category['id'] ?>">
+                      <label style="display: inline-block;" for="<?= $category['name'] . $category['id'] ?>"><?= $category['name'] ?></label>
+                  </div>
+                <?php endforeach ?>
+
+              </div>
+          </div>
+          <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
       </li>
 
     </ul>

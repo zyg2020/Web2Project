@@ -95,7 +95,22 @@
 					];
 				$statement->execute($bindValues);
 			}elseif ($id) {
-				if($_POST['command'] === 'update') {
+				$usernameQuery = "SELECT * FROM users";
+				$usernameStatement = $db->prepare($usernameQuery);
+				$usernameStatement->execute();
+				$usernameAvailable = true;
+				while ($row = $usernameStatement->fetch()) {
+					if ($row['id'] == $id) {
+						continue;
+					}
+					if (strtolower($username) === strtolower($row['username'])) {
+						$usernameAvailable = false;
+						array_push($output, 'Username not Available.');
+						break;
+					}
+				}
+
+				if($usernameAvailable && $_POST['command'] === 'update') {
 					$query = "UPDATE users SET name=:name,email=:email,userType=:userType,address=:address,province=:province,city=:city,country=:country,title=:title,branchOfficeName=:branchOfficeName,username=:username";
 					if ($setPassword) {
 						$query .= ",password=:password";
@@ -116,20 +131,22 @@
 						'id'=>$id
 						];
 					if ($setPassword) {
-						array_push($bindValues, ['password'=>password_hash($password, PASSWORD_BCRYPT)]);
+						//array_push($bindValues, ['password'=>password_hash($password, PASSWORD_BCRYPT)]);
+						$passwordBind = ['password'=>password_hash($password, PASSWORD_BCRYPT)];
+						$bindValues = array_merge($bindValues, $passwordBind);
 					}
 					$statement->execute($bindValues);
 				}
 			}
 		}
-		if (!$hasError) {
+		if (!$output && empty($output)) {
 			header("Location: users.php");
         	exit;
 		}
 	}
 	$selectedUserRow = [];
 	$showUserInfo = false;
-	if (count($_GET)>0) {
+	if (count($_GET)>0 && empty($output)) {
 		if(!isset($_SESSION['isAdministrator']) || !$_SESSION['isAdministrator']) {
 			header("Location: index.php");
 			exit;
@@ -146,9 +163,9 @@
 			$userStatement->execute();
 			$selectedUserRow = $userStatement->fetch();
 			$showUserInfo = true;
-			print_r($selectedUserRow);
+			//print_r($selectedUserRow);
 		}catch (Exception $e) {
-			array_push($output, ['databaseError' => $e->getMessage()]);
+			array_push($output, $e->getMessage());
 		}
 	}
 ?>
@@ -160,9 +177,9 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
 	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
-
+    <?php if (!isset($showUserInfo) || empty($showUserInfo)): ?>
     <script src="main.js"></script>
-    <?php if ($showUserInfo): ?>
+    <?php elseif ($showUserInfo): ?>
     <script>
 		$( document ).ready(function() {
 		     $(".passwordInput" ).hide();

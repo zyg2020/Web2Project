@@ -25,42 +25,65 @@
 
 			$id = filter_input(INPUT_POST, 'id', FILTER_VALIDATE_INT);
 			if (!$id) {
-				array_push($ErrorMessage, ['projectId' => 'Invalid project Id']);
+				array_push($ErrorMessage, 'Invalid project Id');
 
 			}else{
 				$id = filter_var($id,FILTER_SANITIZE_NUMBER_INT);
 
 				date_default_timezone_set('America/Winnipeg');
 
-				if ($_POST['command']=='create') {
-					if (!isset($_SESSION['username'])) {
-						$newVisitorQuery = "INSERT INTO users (name,userType) VALUES (:name,:userType)";
-						$statement = $db->prepare($newVisitorQuery);
-						$bindValues = [
-								'name'=>$name,
-								'userType'=>'visitor'
-								];
-						$statement->execute($bindValues);
-						$userId = $db->lastInsertId();
-					}
+				try {
+					if ($_POST['command']=='create') {
+						if (!isset($_SESSION['username'])) {
+							$newVisitorQuery = "INSERT INTO users (name,userType) VALUES (:name,:userType)";
+							$statement = $db->prepare($newVisitorQuery);
+							$bindValues = [
+									'name'=>$name,
+									'userType'=>'visitor'
+									];
+							$statement->execute($bindValues);
+							$userId = $db->lastInsertId();
+						}
 
-					$commentQuery = "INSERT INTO comments (content,createdTimestamp,projectId,userId) 
-										VALUES (:content,:createdTimestamp,:projectId,:userId)";
-					$statement = $db->prepare($commentQuery);
-					$bindValues = [
-								'content'=>$comment,
-								'createdTimestamp' => date('Y-m-d H:i:s',strtotime("now")),
-								'projectId' => $id,
-								'userId' => $userId
-								];
-					$statement->execute($bindValues);
+						$commentQuery = "INSERT INTO comments (content,createdTimestamp,projectId,userId) 
+											VALUES (:content,:createdTimestamp,:projectId,:userId)";
+						$statement = $db->prepare($commentQuery);
+						$bindValues = [
+									'content'=>$comment,
+									'createdTimestamp' => date('Y-m-d H:i:s',strtotime("now")),
+									'projectId' => $id,
+									'userId' => $userId
+									];
+						$statement->execute($bindValues);
+					}					
+				} catch (Exception $e) {
+					array_push($ErrorMessage, $e->getMessage());
 				}
 
-				header('Location: ' . $_SERVER["HTTP_REFERER"] );
-				exit;
+				if (!$ErrorMessage) {
+					header('Location: ' . $_SERVER["HTTP_REFERER"] );
+					exit;
+				}
+				
 			}
 		}
 	}
 
-
+//print_r($ErrorMessage);
 ?>
+
+
+<?php if (isset($ErrorMessage) && !empty($ErrorMessage)): ?>
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Error Occured During Adding Comments</title>
+</head>
+<body>
+	<?php foreach ($ErrorMessage as $value): ?>
+		<h3><?= $value ?></h3>
+	<?php endforeach ?>
+</body>
+</html>
+	
+<?php endif ?>
