@@ -56,7 +56,7 @@
 			$errorInfo = array_merge($errorInfo,$passwordinfo); 
 
 			if (strlen($password) > 0 && strlen($confirmedPassword) > 0) {
-				if ($password !== $confirmedPassword) {
+				if ($password != $confirmedPassword) {
 					$errorInfo['confirmedPassword']['value'] = false;
 					$errorInfo['confirmedPassword']['errorMessage'] = 'Please input the same password in the second time.';
 				}else{

@@ -54,7 +54,9 @@
         </a>
         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="management.php">Manage All</a>
-            <a class="dropdown-item" href="users.php">Manage Users</a>
+            <?php if (isset($_SESSION['isAdministrator']) && $_SESSION['isAdministrator']): ?>
+            	<a class="dropdown-item" href="users.php">Manage Users</a>          
+            <?php endif ?>
             <a class="dropdown-item" href="editUsers.php">New Users</a>
             <a class="dropdown-item" href="newProject.php">New Project</a>
             <a class="dropdown-item" href="category.php">New Category</a>

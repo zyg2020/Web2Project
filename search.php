@@ -17,6 +17,8 @@
 		foreach ($search_categories as &$value) {
 			$value = filter_var($value, FILTER_SANITIZE_FULL_SPECIAL_CHARS);
 		}
+		// break the reference with the last element
+		unset($value);
 		//$_SESSION['searchCategories'] = $search_categories;
 	}
 	// else{
@@ -99,12 +101,14 @@
 				//echo $key . '=>' . $value . '<br>';
 			}
 		}
+// echo "<br>";
 // print_r($_POST);
-// print_r($selectQuery);
+// echo "<br>";
+// // print_r($selectQuery);
 // echo "<br>";
 // print_r($data);
 // echo "<br>";
-// print_r($pagedQuery);
+// print_r($search_categories);
 		$pagedStatement->execute();
 
 		$data = $pagedStatement->fetchAll();
@@ -203,12 +207,13 @@
 
 			</section>
 			<?php endforeach ?>
-			<?php if (isset($row_count) && !empty($row_count)): ?>
+			<?php if (isset($row_count) && !empty($row_count) && $row_count > ROW_PER_PAGE): ?>
 				<form action="" method="post">
 					<input type="hidden" name="searchWord" value="<?= $inputtedword ?>" />
 					<?php foreach ($search_categories as $value): ?>
 						<input type="hidden" name="searchCategories[]" value="<?= $value ?>" />	
 					<?php endforeach ?>
+
 				<nav aria-label="Page navigation example">
 				  <ul class="pagination">
 				    <button type="submit" name="page" value="<?= ($page-1) ?>" class="page-item" >Previous</button>	
