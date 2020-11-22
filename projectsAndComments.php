@@ -88,13 +88,13 @@
 				echo 'disabled';
 			} ?>" role="button" aria-pressed="true">Edit</a>
 	<button type="button" class="btn btn-primary .btn-xs showButton" id="<?= $row['id'] ?>">Comment</button>
-		 
 	<form class="commentForm" action="processComments.php" method="post" id="form_<?= $row['id'] ?>">
 		<?php if(!isset($_SESSION['username'])): ?>
 		<div class="form-group">
 			<label for="name">Name</label>
 		    <input type="text" class="form-control" id="name" name="name" aria-describedby="emailHelp" />
 		<?php endif ?>
+		<p>The comment will be sent to the project creator's email.</p> 
 		<div class="form-group">
 			<label for="comment">Comment</label>
 	        <textarea class="form-control summernote" rows="10" name="comment" id="comment"></textarea>

@@ -55,6 +55,37 @@
 									'userId' => $userId
 									];
 						$statement->execute($bindValues);
+
+						$email = "";
+						$from_name = "";
+						if (isset($_SESSION['username']) && !empty($_SESSION['username'])){
+							$userEmailQuery = "SELECT email, name FROM users WHERE username = :username";
+							$userEmailStm = $db->prepare($userEmailQuery);
+							$username = filter_var($_SESSION['username'], FILTER_SANITIZE_FULL_SPECIAL_CHARS);
+							$userEmailStm->bindValue(':username', $username);
+							$userEmailStm->execute();
+							$row =  $userEmailStm->fetch();
+							$from_email = $row['email'];
+							$from_name = $row['name'];
+						}else{
+							$from_email = 'zhuyange2018@gmail.com';
+							$from_name = 'visitor';
+						}
+
+						$subject = '';
+						$to_email = '';
+						$to_name = '';
+						$commentedProjectQuery = "SELECT p.title, u.email, u.name FROM projects p INNER JOIN users u ON p.userId = u.id WHERE p.id = :id";
+						$commentedProjectStm = $db->prepare($commentedProjectQuery);
+						$commentedProjectStm->bindValue(':id', $id);
+						$commentedProjectStm->execute();
+						$row = $commentedProjectStm->fetch();
+
+						$subject = 'New Comment On ' . $row['title'];
+						$to_email = $row['email'];
+						$to_name = $row['name'];
+
+						require_once('mailtrap.php');
 					}					
 				} catch (Exception $e) {
 					array_push($ErrorMessage, $e->getMessage());
