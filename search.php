@@ -46,7 +46,9 @@
 		}
 		$in = rtrim($in,",");
 
-		$selectQuery = "SELECT * FROM projects p INNER JOIN projectscategories pc ON p.id = pc.projectId WHERE pc.categoryId IN ($in) AND (p.title LIKE :keyword1 OR p.description LIKE :keyword2 OR p.createdTimestamp LIKE :keyword3) GROUP BY p.id";
+		$selectQuery = "SELECT p.id, MAX(p.title) AS title, MAX(p.createdTimestamp) AS createdTimestamp, MAX(p.updatedTimestamp) AS updatedTimestamp, MAX(p.description) AS description, MAX(p.url) AS url,
+		MAX(p.imagePath) AS imagePath, MAX(p.userId) AS userId
+			 FROM projects p INNER JOIN projectscategories pc ON p.id = pc.projectId WHERE pc.categoryId IN ($in) AND (p.title LIKE :keyword1 OR p.description LIKE :keyword2 OR p.createdTimestamp LIKE :keyword3) GROUP BY p.id";
 
 		$hasCategoriesStm = $db->prepare($selectQuery);
 		$hasCategoriesStm->execute(array_merge($keywordBind ,$in_params));
